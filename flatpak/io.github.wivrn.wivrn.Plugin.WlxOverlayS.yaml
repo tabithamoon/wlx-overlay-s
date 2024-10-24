@@ -1,0 +1,26 @@
+app-id: io.github.wivrn.wivrn.Plugin.WlxOverlayS
+branch: stable
+runtime: io.github.wivrn.wivrn
+runtime-version: stable
+build-extension: true
+separate-locales: false
+appstream-compose: false
+sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+
+modules:
+  - name: wlxoverlay
+    buildsystem: simple
+    build-options:
+      env:
+        CARGO_HOME: /run/build/wlxoverlay/cargo
+    build-commands:
+      - cargo --frozen fetch --manifest-path Cargo.toml --verbose
+      - cargo --frozen build --release --no-default-features --features=wayland,openxr,osc,pipewire,x11
+      - install -D -T ./target/release/wlx-overlay-s /app/bin/wlx-overlay-s
+    sources:
+      - type: git
+        url: https://github.com/galister/wlx-overlay-s.git
+        commit: cf03beef0767730cad645fedc4f9f97899762396
+      - cargo-sources.json
